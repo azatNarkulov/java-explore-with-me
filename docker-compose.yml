@@ -27,7 +27,7 @@ services:
       - POSTGRES_USER=stats_user
       - POSTGRES_PASSWORD=12345
     volumes:
-      - ./stats_data:/var/lib/postgresql/data
+      - ./volumes/stats_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -q -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 10s
@@ -35,9 +35,7 @@ services:
       retries: 5
 
   ewm-service:
-    build:
-      context: ./ewm-service
-      dockerfile: Dockerfile
+    build: ./main-service
     container_name: ewm-service
     ports:
       - "8080:8080"
@@ -55,13 +53,13 @@ services:
     image: postgres:16.1
     container_name: ewm-db
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_DB=ewm
       - POSTGRES_USER=ewm_user
       - POSTGRES_PASSWORD=12345
     volumes:
-      - ./ewm_data:/var/lib/postgresql/data
+      - ./volumes/ewm_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -q -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 10s

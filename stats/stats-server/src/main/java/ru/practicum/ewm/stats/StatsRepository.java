@@ -1,9 +1,9 @@
-package ru.practicum.statserver;
+package ru.practicum.ewm.stats;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.practicum.statdto.ViewStatsDto;
+import ru.practicum.ewm.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

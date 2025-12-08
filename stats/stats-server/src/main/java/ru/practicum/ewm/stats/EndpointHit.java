@@ -1,4 +1,4 @@
-package ru.practicum.statserver;
+package ru.practicum.ewm.stats;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
