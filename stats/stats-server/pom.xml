@@ -28,12 +28,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
@@ -44,6 +38,12 @@
             <artifactId>stats-dto</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -51,21 +51,38 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--                <configuration>-->
-                <!--                    <excludes>-->
-                <!--                        <exclude>-->
-                <!--                            <groupId>org.projectlombok</groupId>-->
-                <!--                            <artifactId>lombok</artifactId>-->
-                <!--                        </exclude>-->
-                <!--                    </excludes>-->
-                <!--                    <annotationProcessorPaths>-->
-                <!--                        <path>-->
-                <!--                            -->
-                <!--                        </path>-->
-                <!--                    </annotationProcessorPaths>-->
-                <!--                </configuration>-->
+                <configuration>
+                    <mainClass>ru.practicum.ewm.StatsServiceApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+<!--                    <configuration>-->
+<!--                        <source>${maven.compiler.source}</source>-->
+<!--                        <target>${maven.compiler.target}</target>-->
+<!--                        <annotationProcessorPaths>-->
+<!--                            <path>-->
+<!--                                <groupId>org.projectlombok</groupId>-->
+<!--                                <artifactId>lombok</artifactId>-->
+<!--                                <version>${lombok.version}</version>-->
+<!--                            </path>-->
+<!--                        </annotationProcessorPaths>-->
+<!--                    </configuration>-->
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>

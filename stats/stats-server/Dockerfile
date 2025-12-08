@@ -1,9 +1,10 @@
-FROM amazoncorretto:22.0.2
+FROM amazoncorretto:21.0.6
 
 WORKDIR /app
 
-COPY target/stats-server-0.0.1-SNAPSHOT.jar app.jar
+VOLUME /tmp
 
-EXPOSE 9090
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
