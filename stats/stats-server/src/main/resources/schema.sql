@@ -1,5 +1,7 @@
+DROP TABLE hits;
+
 CREATE TABLE IF NOT EXISTS hits (
-    id        BIGINT PRIMARY KEY,
+    id        BIGSERIAL PRIMARY KEY,
     app       VARCHAR(255) NOT NULL,
     uri       VARCHAR(255) NOT NULL,
     ip        VARCHAR(255) NOT NULL,
