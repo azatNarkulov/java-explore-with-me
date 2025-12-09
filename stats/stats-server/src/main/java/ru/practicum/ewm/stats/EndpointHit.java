@@ -31,7 +31,7 @@ public class EndpointHit {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
-    public EndpointHit(String api, String uri, String ip, LocalDateTime timestamp) {
+    public EndpointHit(String app, String uri, String ip, LocalDateTime timestamp) {
         this.app = app;
         this.uri = uri;
         this.ip = ip;
