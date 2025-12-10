@@ -1,0 +1,6 @@
+package ru.practicum.ewm.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CompilationRepository extends JpaRepository {
+}
