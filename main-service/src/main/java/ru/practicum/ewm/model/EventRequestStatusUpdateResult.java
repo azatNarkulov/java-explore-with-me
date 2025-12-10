@@ -1,0 +1,14 @@
+package ru.practicum.ewm.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import ru.practicum.ewm.dto.ParticipationRequestDto;
+
+import java.util.List;
+
+@Getter
+@Setter
+public class EventRequestStatusUpdateResult {
+    private List<ParticipationRequestDto> confirmedRequests;
+    private List<ParticipationRequestDto> rejectedRequests;
+}
