@@ -1,4 +1,4 @@
-package ru.practicum.ewm.model;
+package ru.practicum.ewm.questionable;
 
 import lombok.Getter;
 import lombok.Setter;

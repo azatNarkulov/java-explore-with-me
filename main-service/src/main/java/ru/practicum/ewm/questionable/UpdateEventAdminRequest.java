@@ -1,4 +1,4 @@
-package ru.practicum.ewm.model;
+package ru.practicum.ewm.questionable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class UpdateEventUserRequest {
+public class UpdateEventAdminRequest {
     private String annotation;
     private Long category;
     private String description;
