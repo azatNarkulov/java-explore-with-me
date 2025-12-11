@@ -30,5 +30,5 @@ public class Event {
     private Boolean requestModeration;
     private StateActionUser stateAction; // или тут StateActionAdmin?
     private Long confirmedRequests;
-    private Long views;
+    private Long views; // нужно ли тут?
 }

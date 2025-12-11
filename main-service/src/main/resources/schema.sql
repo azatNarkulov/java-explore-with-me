@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS events (
     participant_limit  INTEGER DEFAULT 0,
     request_moderation BOOLEAN DEFAULT TRUE,
     state              VARCHAR(255) NOT NULL,
-    views              INTEGER DEFAULT 0,
+    views              INTEGER DEFAULT 0, // нужно ли это тут, учитывая, что views берётся из сервиса статистики?
     created_on         TIMESTAMP WITHOUT TIME ZONE NOT NULL
     published_on       TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );

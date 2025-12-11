@@ -26,5 +26,5 @@ public class EventFullDto {
     private Boolean requestModeration;
     private String state; // мб тут enum?
     private String title;
-    private Long views;
+    private Long views; // нужно ли тут?
 }
