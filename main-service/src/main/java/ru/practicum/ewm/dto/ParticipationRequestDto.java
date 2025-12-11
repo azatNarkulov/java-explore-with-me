@@ -14,5 +14,5 @@ public class ParticipationRequestDto {
     private Long event;
     private Long id;
     private Long requester;
-    private String status;
+    private String status; // мб здесь enum?
 }

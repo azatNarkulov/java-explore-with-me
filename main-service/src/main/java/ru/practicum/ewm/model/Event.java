@@ -5,7 +5,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.questionable.Location;
-import ru.practicum.ewm.questionable.StateAction;
+import ru.practicum.ewm.enumtypes.StateActionUser;
 
 import java.time.LocalDateTime;
 
@@ -28,7 +28,7 @@ public class Event {
     private Boolean paid;
     private int participantLimit;
     private Boolean requestModeration;
-    private StateAction stateAction;
+    private StateActionUser stateAction; // или тут StateActionAdmin?
     private Long confirmedRequests;
     private Long views;
 }

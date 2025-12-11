@@ -2,6 +2,7 @@ package ru.practicum.ewm.questionable;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.ewm.enumtypes.StateActionUser;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +17,6 @@ public class UpdateEventUserRequest {
     private Boolean paid;
     private int participantLimit;
     private Boolean requestModeration;
-    private StateAction stateAction;
+    private StateActionUser stateAction;
     private String title;
 }

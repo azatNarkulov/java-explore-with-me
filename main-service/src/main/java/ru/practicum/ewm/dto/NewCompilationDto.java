@@ -10,7 +10,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewCompilationDto {
-    private Set<Long> events;
+    private Set<Long> events; // мб List?
     private Boolean pinned;
     private String title;
 }

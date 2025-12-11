@@ -9,5 +9,5 @@ import java.util.List;
 @Setter
 public class EventRequestStatusUpdateRequest {
     private List<Long> requestIds;
-    private String status; // или не String, а RequestStatus
+    private String status; // мб enum
 }

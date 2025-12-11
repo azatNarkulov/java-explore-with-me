@@ -8,7 +8,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class UpdateCompilationRequest {
-    private Set<Long> events;
+    private Set<Long> events; // мб List?
     private Boolean pinned;
     private String title;
 }

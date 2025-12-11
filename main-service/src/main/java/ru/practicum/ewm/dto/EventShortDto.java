@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class EventShortDto {
     private String annotation;
-    private CategoryDto categoryDto;
+    private CategoryDto categoryDto; // или здесь Long categoryId?
     private Long confirmedRequests;
     private LocalDateTime eventDate;
     private Long id;
-//    private UserShortDto initiator;
+    private UserShortDto initiator;
     private Boolean paid;
     private String title;
     private Long views;
