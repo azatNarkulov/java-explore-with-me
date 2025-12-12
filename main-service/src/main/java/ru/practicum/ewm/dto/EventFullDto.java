@@ -1,9 +1,10 @@
 package ru.practicum.ewm.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.questionable.Location;
+import ru.practicum.ewm.enumtypes.EventState;
 
 import java.time.LocalDateTime;
 
@@ -14,17 +15,26 @@ public class EventFullDto {
     private String annotation;
     private CategoryDto category;
     private long confirmedRequests;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
+
     private String description;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
+
     private Long id;
     private UserShortDto initiator;
-    private Location location;
+    private LocationDto location;
     private Boolean paid;
     private int participantLimit;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime publishedOn;
+
     private Boolean requestModeration;
-    private String state; // мб тут enum?
+    private EventState state;
     private String title;
-    private Long views; // нужно ли тут?
+    private Long views;
 }

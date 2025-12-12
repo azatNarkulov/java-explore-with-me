@@ -1,13 +1,12 @@
-package ru.practicum.ewm.questionable;
+package ru.practicum.ewm.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import ru.practicum.ewm.dto.ParticipationRequestDto;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventRequestStatusUpdateResult {
     private List<ParticipationRequestDto> confirmedRequests;
     private List<ParticipationRequestDto> rejectedRequests;

@@ -1,17 +1,20 @@
 package ru.practicum.ewm.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewCategoryDto {
+public class NewUserRequest {
 
     @NotBlank
-    @Size(min = 1, max = 50)
+    @Email
+    private String email;
+
+    @NotBlank
+    @Size(min = 2, max = 250)
     private String name;
 }

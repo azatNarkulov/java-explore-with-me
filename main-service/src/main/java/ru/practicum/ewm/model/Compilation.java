@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,5 +26,11 @@ public class Compilation {
     @Column(name = "pinned", nullable = false)
     private Boolean pinned;
 
-    private List<Long> eventsIds; // тут какая аннотация должна быть?
+    @ManyToMany
+    @JoinTable(
+            name = "compilation_events",
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private Set<Event> events;
 }
