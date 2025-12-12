@@ -1,11 +1,12 @@
 package ru.practicum.ewm.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.practicum.ewm.enumtypes.EventState;
 import ru.practicum.ewm.questionable.Location;
-import ru.practicum.ewm.enumtypes.StateActionUser;
 
 import java.time.LocalDateTime;
 
@@ -13,22 +14,52 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "events")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Event {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "annotation", nullable = false)
     private String annotation;
+
+    @Column(name = "description", nullable = false)
     private String description;
-    private Long category;
+
+    @Column(name = "category_id", nullable = false)
+    private Long category; // или это не Long, а Category?
+
+    @Column(name = "created_on", nullable = false) // или без nullable = false?
     private LocalDateTime createdOn; // должно быть?
+
+    @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
+
+    @Column(name = "published_on", nullable = false) // или без nullable = false?
     private LocalDateTime publishedOn; // должно быть?
-    private Location location;
-    private Long categoryId; // должно быть?
-    private Long initiatorId; // должно быть?
+
+    private Location location; // тут какая аннотация должна быть?
+
+    @Column(name = "initiator_id", nullable = false)
+    private Long initiatorId; // должно быть? Если да, то мб это User, а не Long?
+
+    @Column(name = "paid", nullable = false) // или без nullable = false?
     private Boolean paid;
+
+    @Column(name = "participant_limit")
     private int participantLimit;
+
+    @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;
-    private StateActionUser stateAction; // или тут StateActionAdmin?
+
+    @Column(name = "state", nullable = false)
+    private EventState state;
+
+    @Column(name = "confirmed_requests")
     private Long confirmedRequests;
-    private Long views; // нужно ли тут?
 }
