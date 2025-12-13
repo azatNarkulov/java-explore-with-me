@@ -17,7 +17,7 @@ public class StatsClient {
         this.restClient = restClient;
     }
 
-    public void addHit(EndpointHitDto endpointHitDto) {
+    public void saveHit(EndpointHitDto endpointHitDto) {
         restClient.post().uri("/hit")
                 .body(endpointHitDto)
                 .retrieve()

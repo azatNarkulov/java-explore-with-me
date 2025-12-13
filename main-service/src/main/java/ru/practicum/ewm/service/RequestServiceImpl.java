@@ -100,7 +100,7 @@ public class RequestServiceImpl implements RequestService {
     public List<ParticipationRequestDto> getEventRequestsForInitiator(Long userId, Long eventId) {
         Event event = findEventById(eventId);
 
-        checkAccessToEvent(event, userId, "Только организатор может видеть запросы мероприятие");
+        validateAccessToEvent(event, userId, "Только организатор может видеть запросы мероприятие");
 
         return requestRepository.findByEventId(eventId).stream()
                 .map(mapper::toDto)
@@ -116,7 +116,7 @@ public class RequestServiceImpl implements RequestService {
     ) {
         Event event = findEventById(eventId);
 
-        checkAccessToEvent(event, userId, "Только организатор может обновлять запросы");
+        validateAccessToEvent(event, userId, "Только организатор может обновлять запросы");
 
         if (isRequestModerationDisabled(event)) {
             throw new ConflictException("Запросы на модерацию отключены для данного мероприятия");
@@ -167,7 +167,7 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new NotFoundException("Запрос с таким id не найден"));
     }
 
-    private void checkAccessToEvent(Event event, Long userId, String message) {
+    private void validateAccessToEvent(Event event, Long userId, String message) {
         if (!event.getInitiator().getId().equals(userId)) {
             throw new ForbiddenException(message);
         }
