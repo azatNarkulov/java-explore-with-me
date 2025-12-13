@@ -48,7 +48,7 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "initiator_id", nullable = false)
-    private Long initiator; // или это Long?
+    private User initiator;
 
     @Column(name = "paid", nullable = false) // или без nullable = false?
     private Boolean paid;
