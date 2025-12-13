@@ -13,7 +13,6 @@ import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.repository.UserRepository;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
