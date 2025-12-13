@@ -224,16 +224,19 @@ public class EventServiceImpl implements EventService {
 
         if (dto.getStateAction() != null) {
             switch (dto.getStateAction()) {
-                case PUBLISH_EVENT -> {
+                case PUBLISH_EVENT:
                     validatePending(event, "Опубликовать можно только мероприятия, которые находятся в ожидании");
                     event.setState(EventState.PUBLISHED);
                     event.setPublishedOn(LocalDateTime.now());
-                }
+                    break;
 
-                case REJECT_EVENT -> {
+                case REJECT_EVENT:
                     validatePending(event, "Отклонить можно только те мероприятия, которые находятся в ожидании");
                     event.setState(EventState.CANCELED);
-                }
+                    break;
+
+                default:
+                    break;
             }
         }
 
