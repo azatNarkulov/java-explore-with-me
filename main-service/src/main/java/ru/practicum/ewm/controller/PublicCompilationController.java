@@ -3,25 +3,30 @@ package ru.practicum.ewm.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.CompilationDto;
+import ru.practicum.ewm.service.CompilationService;
 
-@RestController("/compilations")
+import java.util.List;
+
+@RestController
+@RequestMapping("/compilations")
 @RequiredArgsConstructor
-public class PublicCompilationsController {
-    // TODO: добавить сервис
+public class PublicCompilationController {
+    private final CompilationService service;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public void getCompilation(
+    public List<CompilationDto> getCompilations(
             @RequestParam(required = false) Boolean pinned,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size
     ) {
-        // вызов сервиса
+        return service.getAll(pinned, from, size);
     }
 
     @GetMapping("/{compId}")
     @ResponseStatus(HttpStatus.OK)
-    public void getCompilationById(@PathVariable long compId) {
-        // вызов сервиса
+    public CompilationDto getCompilationById(@PathVariable long compId) {
+        return service.getById(compId);
     }
 }

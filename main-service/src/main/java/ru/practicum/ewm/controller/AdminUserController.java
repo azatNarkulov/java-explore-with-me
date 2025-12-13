@@ -1,32 +1,37 @@
 package ru.practicum.ewm.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.NewUserRequest;
+import ru.practicum.ewm.dto.UserDto;
+import ru.practicum.ewm.service.UserService;
 
 import java.util.List;
 
-@RestController("/admin/users")
+@RestController
+@RequestMapping("/admin/users")
 @RequiredArgsConstructor
-public class AdminUsersController {
-    // TODO: добавить сервис
+public class AdminUserController {
+    private final UserService service;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public void getUsers(
+    public List<UserDto> getUsers(
             @RequestParam(required = false) List<Long> ids,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size
     ) {
-        // вызов сервиса
+        return service.getUsers(ids, from, size);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addUser(
-            // TODO: добавить dto в @RequestBody
-    ) {
-        // вызов сервиса
+    public UserDto addUser(
+            @RequestBody @Valid NewUserRequest dto
+            ) {
+        return service.create(dto);
     }
 
     @DeleteMapping("/{userId}")
@@ -34,6 +39,6 @@ public class AdminUsersController {
     public void deleteUser(
             @PathVariable long userId
     ) {
-        // вызов сервиса
+        service.delete(userId);
     }
 }

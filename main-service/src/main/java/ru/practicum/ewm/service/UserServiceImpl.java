@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getUsers(Set<Long> ids, int from, int size) {
+    public List<UserDto> getUsers(List<Long> ids, int from, int size) {
         if (ids != null && !ids.isEmpty()) {
             return userRepository.findAllByIdIn(ids).stream()
                     .map(mapper::toDto)

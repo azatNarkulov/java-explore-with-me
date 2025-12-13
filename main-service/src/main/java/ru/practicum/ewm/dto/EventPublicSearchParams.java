@@ -1,5 +1,6 @@
 package ru.practicum.ewm.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.ewm.enums.EventSort;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class EventPublicSearchParams {
 
     private String text;
