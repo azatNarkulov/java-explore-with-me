@@ -1,7 +1,11 @@
 package ru.practicum.ewm.stats.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
@@ -11,6 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class StatsClient {
+
+    private static final Logger log = LoggerFactory.getLogger(StatsClient.class);
+
     private final RestClient restClient;
 
     public StatsClient(RestClient restClient) {
@@ -18,10 +25,19 @@ public class StatsClient {
     }
 
     public void saveHit(EndpointHitDto endpointHitDto) {
+//        try {
+//            restClient.post().uri("/hit")
+//                    .body(endpointHitDto)
+//                    .retrieve()
+//                    .toBodilessEntity();
+//        } catch (ResourceAccessException e) {
+//            log.warn("Сервис статистики недоступен: {}", e.getMessage());
+//        } catch (RestClientException e) {
+//            log.error("Ошибка при отправке статистики: {}", e.getMessage());
         restClient.post().uri("/hit")
-                .body(endpointHitDto)
-                .retrieve()
-                .toBodilessEntity();
+                    .body(endpointHitDto)
+                    .retrieve()
+                    .toBodilessEntity();
     }
 
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {

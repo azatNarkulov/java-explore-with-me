@@ -24,7 +24,7 @@ public class AdminEventController {
     @ResponseStatus(HttpStatus.OK)
     public List<EventFullDto> getEvents(
             @RequestParam(required = false) List<Long> usersId,
-            @RequestParam(required = false) List<EventState> states,
+            @RequestParam(required = false) List<String> states,
             @RequestParam(required = false) List<Long> categoriesId,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,

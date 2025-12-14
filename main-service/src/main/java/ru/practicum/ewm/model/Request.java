@@ -21,17 +21,17 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id", nullable = false)
     private User requester;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", length = 50)
     private RequestStatus status;
 }

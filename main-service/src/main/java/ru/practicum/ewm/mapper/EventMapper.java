@@ -28,6 +28,6 @@ public interface EventMapper {
     @Mapping(target = "state", ignore = true)
     @Mapping(target = "createdOn", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
-    @Mapping(target = "confirmedRequests", ignore = true)
+//    @Mapping(target = "confirmedRequests", ignore = true)
     Event toEntity(NewEventDto dto);
 }
