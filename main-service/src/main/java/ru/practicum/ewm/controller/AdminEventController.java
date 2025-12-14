@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.EventAdminSearchParams;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.UpdateEventAdminRequest;
-import ru.practicum.ewm.enums.EventState;
 import ru.practicum.ewm.service.EventService;
 
 import java.time.LocalDateTime;
