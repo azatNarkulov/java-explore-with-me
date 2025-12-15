@@ -100,7 +100,7 @@ public class RequestServiceImpl implements RequestService {
     public List<ParticipationRequestDto> getEventRequestsForInitiator(Long userId, Long eventId) {
         Event event = findEventById(eventId);
 
-        validateAccessToEvent(event, userId, "Только организатор может видеть запросы мероприятие");
+        validateAccessToEvent(event, userId);
 
         return requestRepository.findByEventId(eventId).stream()
                 .map(mapper::toDto)
@@ -115,29 +115,46 @@ public class RequestServiceImpl implements RequestService {
             EventRequestStatusUpdateRequest dto
     ) {
         Event event = findEventById(eventId);
+        validateAccessToEvent(event, userId);
 
-        validateAccessToEvent(event, userId, "Только организатор может обновлять запросы");
+        if (!event.getRequestModeration()) {
+            throw new ConflictException("Модерация отключена для данного мероприятия");
+        }
 
-        if (isRequestModerationDisabled(event)) {
-            throw new ConflictException("Запросы на модерацию отключены для данного мероприятия");
+        if (event.getState() != EventState.PUBLISHED) {
+            throw new ConflictException("Событие не опубликовано");
         }
 
         List<Request> requests = requestRepository.findAllById(dto.getRequestIds());
 
+        for (Request request : requests) {
+            if (!request.getEvent().getId().equals(eventId)) {
+                throw new NotFoundException("Запрос не принадлежит этому событию");
+            }
+
+            if (!request.getStatus().equals(RequestStatus.PENDING)) {
+                throw new ConflictException("Обновлять можно только запросы, ожидающие обработки");
+            }
+        }
+
         long confirmedRequests = findConfirmedRequests(eventId);
+
+        if (dto.getStatus() == RequestStatusUpdateAction.CONFIRMED) {
+            if (event.getParticipantLimit() > 0 && confirmedRequests >= event.getParticipantLimit()) {
+                throw new ConflictException("Достигнут лимит участников события");
+            }
+        }
 
         List<ParticipationRequestDto> confirmed = new ArrayList<>();
         List<ParticipationRequestDto> rejected = new ArrayList<>();
 
         for (Request request : requests) {
-            if (!request.getStatus().equals(RequestStatus.PENDING)) {
-                throw new ConflictException("Обновлять можно только запросы, ожидающие обработки");
-            }
 
             if (dto.getStatus() == RequestStatusUpdateAction.CONFIRMED) {
-                if (confirmedRequests >= event.getParticipantLimit()) {
+                if (event.getParticipantLimit() > 0 && confirmedRequests >= event.getParticipantLimit()) {
                     request.setStatus(RequestStatus.REJECTED);
                     rejected.add(mapper.toDto(request));
+//                    throw new ConflictException("Достигнут лимит участников события");
                 } else {
                     request.setStatus(RequestStatus.CONFIRMED);
                     confirmed.add(mapper.toDto(request));
@@ -148,6 +165,8 @@ public class RequestServiceImpl implements RequestService {
                 rejected.add(mapper.toDto(request));
             }
         }
+
+        requestRepository.saveAll(requests);
 
         return new EventRequestStatusUpdateResult(confirmed, rejected);
     }
@@ -167,9 +186,9 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new NotFoundException("Запрос с таким id не найден"));
     }
 
-    private void validateAccessToEvent(Event event, Long userId, String message) {
+    private void validateAccessToEvent(Event event, Long userId) {
         if (!event.getInitiator().getId().equals(userId)) {
-            throw new ForbiddenException(message);
+            throw new ForbiddenException("Доступ есть только у организатора");
         }
     }
 

@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -59,7 +58,10 @@ public class EventServiceImpl implements EventService {
         event.setState(EventState.PENDING);
         event.setCreatedOn(LocalDateTime.now());
 
-        return mapper.toFullDto(eventRepository.save(event), 0L);
+        EventFullDto fullDto = mapper.toFullDto(eventRepository.save(event), 0L);
+        fullDto.setConfirmedRequests(0L);
+
+        return fullDto;
     }
 
     @Override
@@ -98,12 +100,27 @@ public class EventServiceImpl implements EventService {
             event.setPaid(dto.getPaid());
         }
 
+        if (dto.getStateAction() != null) {
+            switch (dto.getStateAction()) {
+                case CANCEL_REVIEW:
+                    event.setState(EventState.CANCELED);
+                    break;
+                case SEND_TO_REVIEW:
+                    event.setState(EventState.PENDING);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         Event saved = eventRepository.save(event);
 
         long views = getViews(List.of(saved))
                 .getOrDefault(saved.getId(), 0L);
 
-        return mapper.toFullDto(saved, views);
+        EventFullDto fullDto = mapper.toFullDto(saved, views);
+        fullDto.setConfirmedRequests(getConfirmedRequests(eventId));
+        return fullDto;
     }
 
     @Override
@@ -115,10 +132,11 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> views = getViews(events);
 
         return events.stream()
-                .map(event -> mapper.toShortDto(
-                        event,
-                        views.getOrDefault(event.getId(), 0L)
-                ))
+                .map(event -> {
+                    EventShortDto shortDto = mapper.toShortDto(event, views.getOrDefault(event.getId(), 0L));
+                    shortDto.setConfirmedRequests(getConfirmedRequests(event.getId()));
+                    return shortDto;
+                })
                 .toList();
     }
 
@@ -131,7 +149,9 @@ public class EventServiceImpl implements EventService {
         long views = getViews(List.of(event))
                 .getOrDefault(eventId, 0L);
 
-        return mapper.toFullDto(event, views);
+        EventFullDto fullDto = mapper.toFullDto(event, views);
+        fullDto.setConfirmedRequests(getConfirmedRequests(eventId));
+        return fullDto;
     }
 
     @Override
@@ -184,10 +204,11 @@ public class EventServiceImpl implements EventService {
         }
 
         return stream
-                .map(event -> mapper.toShortDto(
-                        event,
-                        views.getOrDefault(event.getId(), 0L)
-                        ))
+                .map(event -> {
+                    EventShortDto shortDto = mapper.toShortDto(event, views.getOrDefault(event.getId(), 0L));
+                    shortDto.setConfirmedRequests(getConfirmedRequests(event.getId()));
+                    return shortDto;
+                })
                 .toList();
     }
 
@@ -214,10 +235,11 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> views = getViews(events);
 
         return events.stream()
-                .map(event -> mapper.toFullDto(
-                        event,
-                        views.getOrDefault(event.getId(), 0L)
-                ))
+                .map(event -> {
+                    EventFullDto fullDto = mapper.toFullDto(event, views.getOrDefault(event.getId(), 0L));
+                    fullDto.setConfirmedRequests(getConfirmedRequests(event.getId()));
+                    return fullDto;
+                })
                 .toList();
     }
 
@@ -281,7 +303,9 @@ public class EventServiceImpl implements EventService {
         long views = getViews(List.of(saved))
                 .getOrDefault(saved.getId(), 0L);
 
-        return mapper.toFullDto(saved, views);
+        EventFullDto fullDto = mapper.toFullDto(saved, views);
+        fullDto.setConfirmedRequests(getConfirmedRequests(eventId));
+        return fullDto;
     }
 
     private void logHit(HttpServletRequest request) {
@@ -304,7 +328,16 @@ public class EventServiceImpl implements EventService {
                 .toList();
 
         LocalDateTime start = events.stream()
-                .map(Event::getCreatedOn)
+//                .map(Event::getCreatedOn)
+                .map(event -> {
+                    if (event.getPublishedOn() != null) {
+                        return event.getPublishedOn();
+                    } else if (event.getState() == EventState.PUBLISHED) {
+                        return event.getCreatedOn();
+                    } else {
+                        return LocalDateTime.now();
+                    }
+                })
                 .min(LocalDateTime::compareTo)
                 .orElse(LocalDateTime.now());
 
