@@ -22,7 +22,7 @@ public class EventPublicSearchParams {
     private LocalDateTime rangeEnd;
 
     private Boolean onlyAvailable = false;
-    private EventSort sort;
+    private String sort;
 
     private int from = 0;
     private int size = 10;

@@ -189,13 +189,26 @@ public class EventServiceImpl implements EventService {
             throw new ValidationException("Начало должно быть раньше даты окончания");
         }
 
+        int size = params.getSize();
+        int from = params.getFrom();
+
+        if (size <= 0) {
+            size = 10;
+        }
+
+        if (from < 0) {
+            from = 10;
+        }
+
+        Pageable pageable = PageRequest.of(from / size, size);
+
         List<Event> events = eventRepository.findAllByPublicFilters(
                 params.getText(),
                 params.getCategories(),
                 params.getPaid(),
                 params.getRangeStart(),
                 params.getRangeEnd(),
-                PageRequest.of(params.getFrom() / params.getSize(), params.getSize())
+                pageable
         );
 
         if (params.getOnlyAvailable() != null && params.getOnlyAvailable()) {
@@ -210,13 +223,19 @@ public class EventServiceImpl implements EventService {
 
         Stream<Event> stream = events.stream();
 
-        EventSort sort = params.getSort();
+        EventSort eventSort;
 
-        if (sort == null) {
-            sort = EventSort.EVENT_DATE;
+        if (params.getSort() == null || params.getSort().isBlank()) {
+            eventSort = EventSort.EVENT_DATE;
+        } else {
+            try {
+                eventSort = EventSort.valueOf(params.getSort());
+            } catch (IllegalArgumentException e) {
+                throw new ValidationException("Указан некорректный вариант сортировки");
+            }
         }
 
-        switch (sort) {
+        switch (eventSort) {
             case VIEWS:
                 stream = stream.sorted(
                         Comparator.comparing(
