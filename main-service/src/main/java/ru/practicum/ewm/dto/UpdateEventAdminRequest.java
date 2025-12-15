@@ -2,7 +2,7 @@ package ru.practicum.ewm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotNull;
+//import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public class UpdateEventAdminRequest {
 
     private Boolean requestModeration;
 
-    @NotNull
+//    @NotNull
     private StateActionAdmin stateAction;
 
     @Size(min = 3, max = 120)
