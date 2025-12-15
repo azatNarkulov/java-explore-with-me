@@ -255,9 +255,11 @@ public class EventServiceImpl implements EventService {
                 params.getSize()
         );
 
-        List<EventState> states = params.getStates().stream()
-                .map(EventState::valueOf)
-                .toList();
+        List<EventState> states = params.getStates() == null
+                ? null
+                : params.getStates().stream()
+                        .map(EventState::valueOf)
+                        .toList();
 
         List<Event> events = eventRepository.findAllByAdminFilters(
                 params.getUsers(),

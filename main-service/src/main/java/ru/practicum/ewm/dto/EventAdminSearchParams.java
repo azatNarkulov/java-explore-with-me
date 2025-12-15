@@ -19,6 +19,6 @@ public class EventAdminSearchParams {
     private LocalDateTime rangeStart;
     private LocalDateTime rangeEnd;
 
-    private int from;
-    private int size;
+    private int from = 0;
+    private int size = 10;
 }
