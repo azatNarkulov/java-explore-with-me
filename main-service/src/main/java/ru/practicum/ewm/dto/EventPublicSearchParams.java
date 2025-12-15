@@ -20,9 +20,9 @@ public class EventPublicSearchParams {
     private LocalDateTime rangeStart;
     private LocalDateTime rangeEnd;
 
-    private Boolean onlyAvailable;
+    private Boolean onlyAvailable = false;
     private EventSort sort;
 
-    private int from;
-    private int size;
+    private Integer from = 0;
+    private Integer size = 10;
 }

@@ -13,6 +13,7 @@ import ru.practicum.ewm.enums.RequestStatus;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.ForbiddenException;
 import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.exception.ValidationException;
 import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
@@ -173,6 +174,13 @@ public class EventServiceImpl implements EventService {
     public List<EventShortDto> getPublicEvents(EventPublicSearchParams params, HttpServletRequest request) {
         logHit(request);
 
+        if (params.getRangeStart() != null
+                && params.getRangeEnd() != null
+                && params.getRangeStart().isAfter(params.getRangeEnd())
+        ) {
+            throw new ValidationException("Начало должно быть раньше даты окончания");
+        }
+
         List<Event> events = eventRepository.findAllByPublicFilters(
                 params.getText(),
                 params.getCategories(),
@@ -194,14 +202,42 @@ public class EventServiceImpl implements EventService {
 
         Stream<Event> stream = events.stream();
 
-        if (params.getSort() == EventSort.VIEWS) {
-            stream = stream.sorted(
-                    Comparator.comparing(
-                            event -> views.getOrDefault(event.getId(), 0L),
-                            Comparator.reverseOrder()
-                    )
-            );
+        EventSort sort = params.getSort();
+
+        if (sort == null) {
+            sort = EventSort.EVENT_DATE;
         }
+
+        switch (sort) {
+            case VIEWS:
+                stream = stream.sorted(
+                        Comparator.comparing(
+                                event -> views.getOrDefault(event.getId(), 0L),
+                                Comparator.reverseOrder()
+                        )
+                );
+                break;
+            case EVENT_DATE:
+                stream = stream.sorted(
+                        Comparator.comparing(Event::getEventDate)
+                );
+                break;
+            default:
+                throw new ValidationException("Указан некорректный вариант сортировки");
+        }
+
+//        if (params.getSort() == EventSort.VIEWS) {
+//            stream = stream.sorted(
+//                    Comparator.comparing(
+//                            event -> views.getOrDefault(event.getId(), 0L),
+//                            Comparator.reverseOrder()
+//                    )
+//            );
+//        } else if (params.getSort() == EventSort.EVENT_DATE) {
+//            stream = stream.sorted(
+//                    Comparator.comparing(Event::getEventDate)
+//            );
+//        }
 
         return stream
                 .map(event -> {

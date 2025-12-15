@@ -35,8 +35,10 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "OR LOWER(e.description) LIKE LOWER(CONCAT('%', :text, '%'))) " +
             "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND (:paid IS NULL OR e.paid = :paid) " +
-            "AND (e.eventDate >= :rangeStart) " +
-            "AND (:rangeEnd IS NULL OR e.eventDate <= :rangeEnd) " +
+//            "AND (:rangeStart IS NULL OR e.eventDate >= :rangeStart) " +
+//            "AND (:rangeEnd IS NULL OR e.eventDate <= :rangeEnd) " +
+            "AND e.eventDate >= COALESCE(:rangeStart, e.eventDate) " +
+            "AND e.eventDate <= COALESCE(:rangeEnd, e.eventDate) " +
             "AND e.state = ru.practicum.ewm.enums.EventState.PUBLISHED")
     List<Event> findAllByPublicFilters(
             @Param("text") String text,
