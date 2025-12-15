@@ -2,6 +2,8 @@ package ru.practicum.ewm.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EventServiceImpl implements EventService {
+    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
@@ -172,7 +176,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getPublicEvents(EventPublicSearchParams params, HttpServletRequest request) {
-        logHit(request);
+        try {
+            logHit(request);
+        } catch (Exception e) {
+            log.warn("Не удалось сохранить статистику");
+        }
 
         if (params.getRangeStart() != null
                 && params.getRangeEnd() != null
@@ -379,13 +387,18 @@ public class EventServiceImpl implements EventService {
                 .min(LocalDateTime::compareTo)
                 .orElse(LocalDateTime.now());
 
-        List<ViewStatsDto> stats = statsClient.getStats(start, LocalDateTime.now(), uris, true);
+        try {
+            List<ViewStatsDto> stats = statsClient.getStats(start, LocalDateTime.now(), uris, true);
 
-        return stats.stream()
-                .collect(Collectors.toMap(
-                        stat -> Long.parseLong(stat.getUri().substring("/events/".length())),
-                        ViewStatsDto::getHits
-                ));
+            return stats.stream()
+                    .collect(Collectors.toMap(
+                            stat -> Long.parseLong(stat.getUri().substring("/events/".length())),
+                            ViewStatsDto::getHits
+                    ));
+        } catch (Exception e) {
+            log.warn("Ошибка при получении статистики просмотров", e);
+            return Collections.emptyMap();
+        }
     }
 
     private long getConfirmedRequests(Long eventId) {

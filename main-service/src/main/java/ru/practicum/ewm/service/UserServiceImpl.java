@@ -2,6 +2,8 @@ package ru.practicum.ewm.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.NewUserRequest;
@@ -44,13 +46,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsers(List<Long> ids, int from, int size) {
+        Pageable pageable = PageRequest.of(
+                from / size,
+                size,
+                Sort.by(Sort.Direction.ASC, "id")
+        );
+
         if (ids != null && !ids.isEmpty()) {
-            return userRepository.findAllByIdIn(ids).stream()
+            return userRepository.findAllByIdIn(ids, pageable).stream()
                     .map(mapper::toDto)
                     .toList();
         }
 
-        return userRepository.findAll(PageRequest.of(from / size, size)).stream()
+
+        return userRepository.findAll(pageable).stream()
                 .map(mapper::toDto)
                 .toList();
     }

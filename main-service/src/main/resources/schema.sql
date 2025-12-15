@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS events (
 --    confirmed_requests INTEGER,
     lat                FLOAT,
     lon                FLOAT,
-    paid               BOOLEAN DEFAULT FALSE, -- NOT NULL ?
+    paid               BOOLEAN DEFAULT FALSE,
     participant_limit  INTEGER DEFAULT 0,
     request_moderation BOOLEAN DEFAULT TRUE,
     state              VARCHAR(50) NOT NULL,
