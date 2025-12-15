@@ -72,7 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
         Pageable pageable = PageRequest.of(
                 from / size,
                 size,
-                Sort.by(Sort.Direction.ASC, "id")
+                Sort.by(Sort.Direction.DESC, "id")
         );
 
         return categoryRepository.findAll(pageable).stream()
