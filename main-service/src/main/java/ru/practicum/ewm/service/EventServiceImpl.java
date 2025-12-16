@@ -2,8 +2,7 @@ package ru.practicum.ewm.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,8 +38,9 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class EventServiceImpl implements EventService {
-    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
+//    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
@@ -176,6 +176,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getPublicEvents(EventPublicSearchParams params, HttpServletRequest request) {
+        log.info("getPublicEvents started with params={}", params);
+
         try {
             logHit(request);
         } catch (Exception e) {
@@ -202,24 +204,84 @@ public class EventServiceImpl implements EventService {
 
         Pageable pageable = PageRequest.of(from / size, size);
 
-        List<Event> events = eventRepository.findAllByPublicFilters(
+        List<Long> categories = params.getCategories();
+        if (categories != null && categories.isEmpty()) {
+            log.debug("Categories list is empty, converting to null");
+            categories = null;
+        }
+
+        log.debug(
+                "Calling repository with filters: text={}, categories={}, paid={}, " +
+                        "rangeStart={}, rangeEnd={}, onlyAvailable={}, pageable={}",
                 params.getText(),
-                params.getCategories(),
+                categories,
                 params.getPaid(),
                 params.getRangeStart(),
                 params.getRangeEnd(),
+                params.getOnlyAvailable(),
                 pageable
         );
 
+        List<Event> events;
+
+        if (categories == null || categories.isEmpty()) {
+            events = eventRepository.findAllByPublicFiltersWithoutCategories(
+                    params.getText(),
+//                params.getCategories(),
+//                    categories,
+                    params.getPaid(),
+                    params.getRangeStart(),
+                    params.getRangeEnd(),
+//                    params.getOnlyAvailable(),
+                    EventState.PUBLISHED,
+                    pageable
+            );
+        } else {
+            events = eventRepository.findAllByPublicFiltersWithCategories(
+                    params.getText(),
+//                params.getCategories(),
+                    categories,
+                    params.getPaid(),
+                    params.getRangeStart(),
+                    params.getRangeEnd(),
+//                    params.getOnlyAvailable(),
+                    EventState.PUBLISHED,
+                    pageable
+            );
+        }
+
+//        try {
+//            events = eventRepository.findAllByPublicFilters(
+//                    params.getText() == null ? null : params.getText().toLowerCase(),
+////                params.getCategories(),
+//                    categories,
+//                    params.getPaid(),
+//                    params.getRangeStart(),
+//                    params.getRangeEnd(),
+//                    params.getOnlyAvailable(),
+//                    EventState.PUBLISHED,
+//                    pageable
+//            );
+//        } catch (Exception e) {
+//            log.error("Repository call failed", e);
+//            throw e;
+//        }
+
+        log.info("Repository returned {} events", events.size());
+
         if (params.getOnlyAvailable() != null && params.getOnlyAvailable()) {
+            int before = events.size();
             events = events.stream()
                     .filter(event ->
                             event.getParticipantLimit() == 0 || getConfirmedRequests(event.getId())
                                     < event.getParticipantLimit())
                     .toList();
+
+            log.debug("onlyAvailable filter applied: before={}, after={}", before, events.size());
         }
 
         Map<Long, Long> views = getViews(events);
+        log.debug("Views loaded for {} events", views.size());
 
         Stream<Event> stream = events.stream();
 
@@ -231,9 +293,12 @@ public class EventServiceImpl implements EventService {
             try {
                 eventSort = EventSort.valueOf(params.getSort());
             } catch (IllegalArgumentException e) {
+                log.warn("Invalid sort parameter: {}", params.getSort());
                 throw new ValidationException("Указан некорректный вариант сортировки");
             }
         }
+
+        log.warn("Sorting events by {}", eventSort);
 
         switch (eventSort) {
             case VIEWS:
@@ -266,13 +331,24 @@ public class EventServiceImpl implements EventService {
 //            );
 //        }
 
-        return stream
+//        return stream
+//                .map(event -> {
+//                    EventShortDto shortDto = mapper.toShortDto(event, views.getOrDefault(event.getId(), 0L));
+//                    shortDto.setConfirmedRequests(getConfirmedRequests(event.getId()));
+//                    return shortDto;
+//                })
+//                .toList();
+
+        List<EventShortDto> result = stream
                 .map(event -> {
                     EventShortDto shortDto = mapper.toShortDto(event, views.getOrDefault(event.getId(), 0L));
                     shortDto.setConfirmedRequests(getConfirmedRequests(event.getId()));
                     return shortDto;
                 })
                 .toList();
+
+        log.info("getPublicEvents finished, returning {} items", result.size());
+        return result;
     }
 
     @Override
@@ -288,10 +364,16 @@ public class EventServiceImpl implements EventService {
                         .map(EventState::valueOf)
                         .toList();
 
+        List<Long> categories = params.getCategories();
+        if (categories != null && categories.isEmpty()) {
+            categories = null;
+        }
+
         List<Event> events = eventRepository.findAllByAdminFilters(
                 params.getUsers(),
                 states,
-                params.getCategories(),
+//                params.getCategories(),
+                categories,
                 params.getRangeStart(),
                 params.getRangeEnd(),
                 pageable
