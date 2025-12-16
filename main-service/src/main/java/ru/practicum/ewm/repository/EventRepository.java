@@ -93,18 +93,17 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 //    );
 
     @Query(
-            value = """
-        SELECT e.*
-        FROM events e
-        WHERE (:text IS NULL OR
-               e.annotation ILIKE CONCAT('%', :text, '%') OR
-               e.description ILIKE CONCAT('%', :text, '%'))
-        AND e.category_id IN (:categories)
-        AND (:paid IS NULL OR e.paid = :paid)
-        AND e.event_date >= COALESCE(:rangeStart, e.event_date)
-        AND e.event_date <= COALESCE(:rangeEnd, e.event_date)
-        AND e.state = :state
-        """,
+            value =
+                    "SELECT e.* " +
+                    "FROM events e " +
+                    "WHERE (:text IS NULL OR " +
+                    "       e.annotation ILIKE CONCAT('%', :text, '%') OR " +
+                    "       e.description ILIKE CONCAT('%', :text, '%')) " +
+                    "AND e.category_id IN (:categories) " +
+                    "AND (:paid IS NULL OR e.paid = :paid) " +
+                    "AND e.event_date >= COALESCE(:rangeStart, e.event_date) " +
+                    "AND e.event_date <= COALESCE(:rangeEnd, e.event_date) " +
+                    "AND e.state = :state",
             nativeQuery = true
     )
     List<Event> findAllByPublicFiltersWithCategories(
@@ -118,17 +117,16 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     );
 
     @Query(
-            value = """
-        SELECT e.*
-        FROM events e
-        WHERE (:text IS NULL OR
-               e.annotation ILIKE CONCAT('%', :text, '%') OR
-               e.description ILIKE CONCAT('%', :text, '%'))
-        AND (:paid IS NULL OR e.paid = :paid)
-        AND e.event_date >= COALESCE(:rangeStart, e.event_date)
-        AND e.event_date <= COALESCE(:rangeEnd, e.event_date)
-        AND e.state = :state
-        """,
+            value =
+                    "SELECT e.* " +
+                    "FROM events e " +
+                    "WHERE (:text IS NULL OR " +
+                    "       e.annotation ILIKE CONCAT('%', :text, '%') OR " +
+                    "       e.description ILIKE CONCAT('%', :text, '%')) " +
+                    "AND (:paid IS NULL OR e.paid = :paid) " +
+                    "AND e.event_date >= COALESCE(:rangeStart, e.event_date) " +
+                    "AND e.event_date <= COALESCE(:rangeEnd, e.event_date) " +
+                    "AND e.state = :state",
             nativeQuery = true
     )
     List<Event> findAllByPublicFiltersWithoutCategories(
