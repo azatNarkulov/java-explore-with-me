@@ -233,7 +233,8 @@ public class EventServiceImpl implements EventService {
                     params.getRangeStart(),
                     params.getRangeEnd(),
 //                    params.getOnlyAvailable(),
-                    EventState.PUBLISHED,
+//                    EventState.PUBLISHED,
+                    "PUBLISHED",
                     pageable
             );
         } else {
@@ -245,7 +246,8 @@ public class EventServiceImpl implements EventService {
                     params.getRangeStart(),
                     params.getRangeEnd(),
 //                    params.getOnlyAvailable(),
-                    EventState.PUBLISHED,
+//                    EventState.PUBLISHED,
+                    "PUBLISHED",
                     pageable
             );
         }
