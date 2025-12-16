@@ -49,17 +49,18 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 //            Pageable pageable
 //    );
 
-    @Query("""
-    SELECT e FROM Event e
-    WHERE (:text IS NULL OR
-       LOWER(e.annotation) LIKE LOWER(CONCAT('%', :text, '%')) OR
-       LOWER(e.description) LIKE LOWER(CONCAT('%', :text, '%')))
-    AND e.category.id IN :categories
-    AND (:paid IS NULL OR e.paid = :paid)
-    AND e.eventDate >= COALESCE(:rangeStart, e.eventDate)
-    AND e.eventDate <= COALESCE(:rangeEnd, e.eventDate)
-    AND e.state = :state
-    """)
+    @Query(
+            "SELECT e FROM Event e " +
+                    "WHERE (:text IS NULL OR " +
+                    "   LOWER(e.annotation) LIKE LOWER(CONCAT('%', :text, '%')) OR " +
+                    "   LOWER(e.description) LIKE LOWER(CONCAT('%', :text, '%')) " +
+                    ") " +
+                    "AND e.category.id IN :categories " +
+                    "AND (:paid IS NULL OR e.paid = :paid) " +
+                    "AND e.eventDate >= COALESCE(:rangeStart, e.eventDate) " +
+                    "AND e.eventDate <= COALESCE(:rangeEnd, e.eventDate) " +
+                    "AND e.state = :state"
+    )
     List<Event> findAllByPublicFiltersWithCategories(
             @Param("text") String text,
             @Param("categories") List<Long> categories,
@@ -70,16 +71,17 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             Pageable pageable
     );
 
-    @Query("""
-    SELECT e FROM Event e
-    WHERE (:text IS NULL OR
-       LOWER(e.annotation) LIKE LOWER(CONCAT('%', :text, '%')) OR
-       LOWER(e.description) LIKE LOWER(CONCAT('%', :text, '%')))
-    AND (:paid IS NULL OR e.paid = :paid)
-    AND e.eventDate >= COALESCE(:rangeStart, e.eventDate)
-    AND e.eventDate <= COALESCE(:rangeEnd, e.eventDate)
-    AND e.state = :state
-    """)
+    @Query(
+            "SELECT e FROM Event e " +
+                    "WHERE (:text IS NULL OR " +
+                    "   LOWER(e.annotation) LIKE LOWER(CONCAT('%', :text, '%')) OR " +
+                    "   LOWER(e.description) LIKE LOWER(CONCAT('%', :text, '%')) " +
+                    ") " +
+                    "AND (:paid IS NULL OR e.paid = :paid) " +
+                    "AND e.eventDate >= COALESCE(:rangeStart, e.eventDate) " +
+                    "AND e.eventDate <= COALESCE(:rangeEnd, e.eventDate) " +
+                    "AND e.state = :state"
+    )
     List<Event> findAllByPublicFiltersWithoutCategories(
             @Param("text") String text,
 //            @Param("categories") List<Long> categories,
