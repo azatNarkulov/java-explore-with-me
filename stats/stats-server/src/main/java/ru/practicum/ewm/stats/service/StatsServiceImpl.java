@@ -8,6 +8,7 @@ import ru.practicum.ewm.stats.EndpointHitMapper;
 import ru.practicum.ewm.stats.StatsRepository;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
+import ru.practicum.ewm.stats.exception.ValidationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,11 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+
+        if (start.isAfter(end)) {
+            throw new ValidationException("Окончание не может быть раньше старта");
+        }
+
         return unique ? statsRepository.findUniqueStats(start, end, uris) : statsRepository.findStats(start, end, uris);
     }
 }
