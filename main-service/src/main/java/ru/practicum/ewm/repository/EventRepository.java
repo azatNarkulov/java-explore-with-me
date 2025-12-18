@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.practicum.ewm.enums.EventState;
-import ru.practicum.ewm.model.Event;
+import ru.practicum.ewm.model.event.EventState;
+import ru.practicum.ewm.model.event.Event;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
