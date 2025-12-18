@@ -40,7 +40,6 @@ import java.util.stream.Stream;
 @Transactional(readOnly = true)
 @Slf4j
 public class EventServiceImpl implements EventService {
-//    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
@@ -227,47 +226,23 @@ public class EventServiceImpl implements EventService {
         if (categories == null || categories.isEmpty()) {
             events = eventRepository.findAllByPublicFiltersWithoutCategories(
                     params.getText(),
-//                params.getCategories(),
-//                    categories,
                     params.getPaid(),
                     params.getRangeStart(),
                     params.getRangeEnd(),
-//                    params.getOnlyAvailable(),
-//                    EventState.PUBLISHED,
                     "PUBLISHED",
                     pageable
             );
         } else {
             events = eventRepository.findAllByPublicFiltersWithCategories(
                     params.getText(),
-//                params.getCategories(),
                     categories,
                     params.getPaid(),
                     params.getRangeStart(),
                     params.getRangeEnd(),
-//                    params.getOnlyAvailable(),
-//                    EventState.PUBLISHED,
                     "PUBLISHED",
                     pageable
             );
         }
-
-//        try {
-//            events = eventRepository.findAllByPublicFilters(
-//                    params.getText() == null ? null : params.getText().toLowerCase(),
-////                params.getCategories(),
-//                    categories,
-//                    params.getPaid(),
-//                    params.getRangeStart(),
-//                    params.getRangeEnd(),
-//                    params.getOnlyAvailable(),
-//                    EventState.PUBLISHED,
-//                    pageable
-//            );
-//        } catch (Exception e) {
-//            log.error("Repository call failed", e);
-//            throw e;
-//        }
 
         log.info("Repository returned {} events", events.size());
 
@@ -320,27 +295,6 @@ public class EventServiceImpl implements EventService {
                 throw new ValidationException("Указан некорректный вариант сортировки");
         }
 
-//        if (params.getSort() == EventSort.VIEWS) {
-//            stream = stream.sorted(
-//                    Comparator.comparing(
-//                            event -> views.getOrDefault(event.getId(), 0L),
-//                            Comparator.reverseOrder()
-//                    )
-//            );
-//        } else if (params.getSort() == EventSort.EVENT_DATE) {
-//            stream = stream.sorted(
-//                    Comparator.comparing(Event::getEventDate)
-//            );
-//        }
-
-//        return stream
-//                .map(event -> {
-//                    EventShortDto shortDto = mapper.toShortDto(event, views.getOrDefault(event.getId(), 0L));
-//                    shortDto.setConfirmedRequests(getConfirmedRequests(event.getId()));
-//                    return shortDto;
-//                })
-//                .toList();
-
         List<EventShortDto> result = stream
                 .map(event -> {
                     EventShortDto shortDto = mapper.toShortDto(event, views.getOrDefault(event.getId(), 0L));
@@ -374,7 +328,6 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.findAllByAdminFilters(
                 params.getUsers(),
                 states,
-//                params.getCategories(),
                 categories,
                 params.getRangeStart(),
                 params.getRangeEnd(),
@@ -477,7 +430,6 @@ public class EventServiceImpl implements EventService {
                 .toList();
 
         LocalDateTime start = events.stream()
-//                .map(Event::getCreatedOn)
                 .map(event -> {
                     if (event.getPublishedOn() != null) {
                         return event.getPublishedOn();

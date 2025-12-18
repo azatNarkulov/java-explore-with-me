@@ -37,7 +37,6 @@ public class UpdateEventAdminRequest {
 
     private Boolean requestModeration;
 
-//    @NotNull
     private StateActionAdmin stateAction;
 
     @Size(min = 3, max = 120)

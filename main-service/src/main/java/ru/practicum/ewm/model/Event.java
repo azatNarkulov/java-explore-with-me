@@ -34,8 +34,8 @@ public class Event {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(name = "created_on", nullable = false) // или без nullable = false?
-    private LocalDateTime createdOn; // должно быть?
+    @Column(name = "created_on", nullable = false)
+    private LocalDateTime createdOn;
 
     @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
@@ -62,7 +62,4 @@ public class Event {
     @Column(name = "state", length = 50)
     @Enumerated(EnumType.STRING)
     private EventState state;
-
-//    @Column(name = "confirmed_requests")
-//    private Long confirmedRequests;
 }

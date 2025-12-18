@@ -30,7 +30,6 @@ public class PublicEventController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
-//            @RequestParam(required = false) Boolean onlyAvailable,
             @RequestParam(required = false) String sort,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size,
@@ -39,18 +38,6 @@ public class PublicEventController {
         log.info("GET /events called: text={}, categories={}, paid={}, rangeStart={}, " +
                         "rangeEnd={}, onlyAvailable={}, sort={}, from={}, size={}",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
-
-//        return service.getPublicEvents(new EventPublicSearchParams(
-//                text,
-//                categories,
-//                paid,
-//                rangeStart,
-//                rangeEnd,
-//                onlyAvailable,
-//                sort,
-//                from,
-//                size
-//        ), request);
 
         List<EventShortDto> result = service.getPublicEvents(new EventPublicSearchParams(
                 text,

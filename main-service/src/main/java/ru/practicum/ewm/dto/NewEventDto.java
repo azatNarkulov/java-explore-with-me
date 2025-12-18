@@ -32,13 +32,11 @@ public class NewEventDto {
     @NotNull
     private LocationDto location;
 
-//    @NotNull
     private Boolean paid = false;
 
     @PositiveOrZero
     private int participantLimit = 0;
 
-//    @NotNull
     private Boolean requestModeration = true;
 
     @NotBlank

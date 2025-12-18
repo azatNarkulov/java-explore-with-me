@@ -34,10 +34,6 @@ public class StatsClient {
             log.warn("Сервис статистики недоступен: {}", e.getMessage());
         } catch (RestClientException e) {
             log.error("Ошибка при отправке статистики: {}", e.getMessage());
-//        restClient.post().uri("/hit")
-//                    .body(endpointHitDto)
-//                    .retrieve()
-//                    .toBodilessEntity();
         }
     }
 
