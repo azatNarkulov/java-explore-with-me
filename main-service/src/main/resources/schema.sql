@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS compilation_events;
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS compilations;
 DROP TABLE IF EXISTS requests;
 DROP TABLE IF EXISTS events;
@@ -24,14 +25,12 @@ CREATE TABLE IF NOT EXISTS events (
     initiator_id       INTEGER NOT NULL REFERENCES users(id),
     category_id        INTEGER NOT NULL REFERENCES categories(id),
     event_date         TIMESTAMP WITHOUT TIME ZONE NOT NULL,
---    confirmed_requests INTEGER,
     lat                FLOAT,
     lon                FLOAT,
     paid               BOOLEAN DEFAULT FALSE,
     participant_limit  INTEGER DEFAULT 0,
     request_moderation BOOLEAN DEFAULT TRUE,
     state              VARCHAR(50) NOT NULL,
---    views              INTEGER DEFAULT 0, -- нужно ли это тут, учитывая, что views берётся из сервиса статистики?
     created_on         TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     published_on       TIMESTAMP WITHOUT TIME ZONE
 );
@@ -42,6 +41,14 @@ CREATE TABLE IF NOT EXISTS requests (
     requester_id INTEGER NOT NULL,
     status       VARCHAR(50) NOT NULL,
     created      TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+    id        BIGSERIAL PRIMARY KEY,
+    text      VARCHAR(2000) NOT NULL,
+    created   TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    author_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    event_id  BIGINT NOT NULL REFERENCES events(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS compilations (

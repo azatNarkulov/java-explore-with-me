@@ -2,10 +2,10 @@ package ru.practicum.ewm.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.ewm.dto.EventFullDto;
-import ru.practicum.ewm.dto.EventShortDto;
-import ru.practicum.ewm.dto.NewEventDto;
-import ru.practicum.ewm.model.Event;
+import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.EventShortDto;
+import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.model.event.Event;
 
 @Mapper(
         componentModel = "spring",
@@ -15,8 +15,6 @@ public interface EventMapper {
 
     @Mapping(target = "views", source = "views")
     @Mapping(target = "confirmedRequests", ignore = true)
-//    @Mapping(target = "initiator", ignore = true)
-//    @Mapping(target = "category", ignore = true)
     EventFullDto toFullDto(Event event, long views);
 
     @Mapping(target = "views", source = "views")
@@ -29,6 +27,5 @@ public interface EventMapper {
     @Mapping(target = "state", ignore = true)
     @Mapping(target = "createdOn", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
-//    @Mapping(target = "confirmedRequests", ignore = true)
     Event toEntity(NewEventDto dto);
 }
